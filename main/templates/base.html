@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<title>{% block title %}{% endblock %} - Sound Bar</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<nav>
+    <h1>Sound Bar</h1>
+    <ul>
+        {% if g.user %}
+            <li><span>{{ g.user['username'] }}</span></li>
+            <li><a href="{{ url_for('sounds.index') }}">Home</a></li>
+            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+        {% endif %}
+    </ul>
+</nav>
+<section class="content">
+    {% if not g.user %}
+    <ul>
+        <li class="guest-auth"><a href="{{ url_for('auth.register') }}">Register</a></li>
+        <li class="guest-auth"><a  href="{{ url_for('auth.login') }}">Log In</a></li>
+    </ul>
+    {% endif %}
+
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+
+    {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+</section>
+
+

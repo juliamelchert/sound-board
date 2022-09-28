@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+{% extends 'base.html' %}
+
+{% block header %}
+  {% if g.user %}
+    <h1>{% block title %}Sounds{% endblock %}</h1>
+    <a class="action" href="{{ url_for('sounds.add') }}">New</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if g.user %}
+  {% for sound in sounds %}
+    <article class="sound">
+      <header>
+        <div>
+          <h1>{{ sound['title'] }}</h1>
+        </div>
+        <a class="action" href="{{ url_for('sounds.update', id=sound['id']) }}">Edit</a>
+      </header>
+      <p class="url">{{ sound['url'] }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% endblock %}
