@@ -20,11 +20,12 @@ def index():
             (g.user['id'],)
         ).fetchall()
 
+        # SHOULD TECHNICALLY GO IN REGISTRATION
         if sounds == []:
             db.execute(
                 'INSERT INTO sound (title, url, user_id)'
                 ' VALUES (?, ?, ?)',
-                ("default", "www.example.com", g.user['id'])
+                ("Wrong Answer", "../../static/default_sounds/Error Sound Effect.mp3", g.user['id'])
             )
             db.commit()
 

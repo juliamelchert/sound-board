@@ -16,10 +16,10 @@
       <header>
         <div>
           <h1>{{ sound['title'] }}</h1>
+          <audio controls><source src="{{ sound['url'] }}" type="audio/mpeg"></audio>
         </div>
         <a class="action" href="{{ url_for('sounds.update', id=sound['id']) }}">Edit</a>
       </header>
-      <p class="url">{{ sound['url'] }}</p>
     </article>
     {% if not loop.last %}
       <hr>
