@@ -38,10 +38,11 @@ def register():
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
-                    (username, generate_password_hash(password)),
+                    "INSERT INTO user (username, password, first_login) VALUES (?, ?, ?)",
+                    (username, generate_password_hash(password), 0),
                 )
                 db.commit()
+
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:
@@ -71,6 +72,25 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
+
+            if user['first_login'] == 0:
+
+                # Insert default sounds
+                db.execute(
+                'INSERT INTO sound (title, url, user_id)'
+                ' VALUES (?, ?, ?)',
+                ("Wrong Answer", "../../static/default_sounds/Error Sound Effect.mp3", user['id'])
+                )
+                db.commit()
+
+                # Update first_login value so these sounds are not inserted again
+                db.execute(
+                'UPDATE user SET first_login = ?'
+                ' WHERE id = ?',
+                (1, user['id'])
+                )
+                db.commit()
+
             return redirect(url_for('index'))
 
         flash(error)

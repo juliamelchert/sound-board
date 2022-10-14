@@ -4,7 +4,8 @@ DROP TABLE IF EXISTS sound;
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL
+  password TEXT NOT NULL,
+  first_login INTEGER NOT NULL
 );
 
 CREATE TABLE sound (
