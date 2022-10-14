@@ -79,7 +79,13 @@ def login():
                 db.execute(
                 'INSERT INTO sound (title, url, user_id)'
                 ' VALUES (?, ?, ?)',
-                ("Wrong Answer", "../../static/default_sounds/Error Sound Effect.mp3", user['id'])
+                ("Correct", "../../static/default_sounds/Correct Sound Effect.mp3", user['id'])
+                )
+                db.commit()
+                db.execute(
+                'INSERT INTO sound (title, url, user_id)'
+                ' VALUES (?, ?, ?)',
+                ("Incorrect", "../../static/default_sounds/Incorrect Sound Effect.mp3", user['id'])
                 )
                 db.commit()
 
