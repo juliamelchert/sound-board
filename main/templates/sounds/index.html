@@ -16,7 +16,7 @@
       <header>
         <div>
           <h1>{{ sound['title'] }}</h1>
-          <audio controls><source src="{{ sound['url'] }}" type="audio/mpeg"></audio>
+          <audio controls><source src="{{ sound['path'] }}" type="audio/mpeg"></audio>
         </div>
         <a class="action" href="{{ url_for('sounds.update', id=sound['id']) }}">Edit</a>
       </header>

@@ -3,9 +3,12 @@ from flask import (
 )
 from itsdangerous import NoneAlgorithm
 from werkzeug.exceptions import abort
+from werkzeug.utils import secure_filename
 
 from main.auth import login_required
 from main.db import get_db
+
+import os
 
 bp = Blueprint('sounds', __name__)
 
@@ -14,7 +17,7 @@ def index():
     db = get_db()
     if g.user is not None:
         sounds = db.execute(
-            'SELECT s.id, title, url, user_id, username'
+            'SELECT s.id, title, path, user_id, username'
             ' FROM sound s JOIN user u ON s.user_id = u.id'
             ' WHERE s.user_id = ?',
             (g.user['id'],)
@@ -23,6 +26,7 @@ def index():
     else:
         sounds = []
 
+    print("Including the following sounds:", sounds)
     return render_template('sounds/index.html', sounds=sounds)
 
 
@@ -30,8 +34,20 @@ def index():
 @login_required
 def add():
     if request.method == 'POST':
+
+        # If form submitted without file submitted
+        if "file" not in request.files:
+            return redirect(request.url)
+
+        # If the file is blank
+        file = request.files["file"]
+        if file.filename == "":
+            return redirect(request.url)
+
+        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/user_sounds', secure_filename(file.filename)))
+
         title = request.form['title']
-        url = request.form['url']
+        path = os.path.join('../../static/user_sounds', secure_filename(file.filename))
         error = None
 
         if not title:
@@ -42,11 +58,14 @@ def add():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO sound (title, url, user_id)'
+                'INSERT INTO sound (title, path, user_id)'
                 ' VALUES (?, ?, ?)',
-                (title, url, g.user['id'])
+                (title, path, g.user['id'])
             )
             db.commit()
+
+            print(f"Uploaded file path '{path}'.")
+
             return redirect(url_for('sounds.index'))
 
     return render_template('sounds/add.html')
@@ -54,7 +73,7 @@ def add():
 
 def get_sound(id, check_author=True):
     sound = get_db().execute(
-        'SELECT s.id, title, url, user_id, username'
+        'SELECT s.id, title, path, user_id, username'
         ' FROM sound s JOIN user u ON s.user_id = u.id'
         ' WHERE s.id = ?',
         (id,)
@@ -76,7 +95,6 @@ def update(id):
 
     if request.method == 'POST':
         title = request.form['title']
-        url = request.form['url']
         error = None
 
         if not title:
@@ -87,9 +105,9 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                'UPDATE sound SET title = ?, url = ?'
+                'UPDATE sound SET title = ?'
                 ' WHERE id = ?',
-                (title, url, id)
+                (title, id)
             )
             db.commit()
             return redirect(url_for('sounds.index'))

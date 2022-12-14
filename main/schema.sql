@@ -12,6 +12,6 @@ CREATE TABLE sound (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL,
   title TEXT NOT NULL,
-  url TEXT NOT NULL,
+  path TEXT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES user (id)
 );

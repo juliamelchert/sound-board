@@ -11,8 +11,6 @@
     <label for="title">Title</label>
     <input name="title" id="title"
       value="{{ request.form['title'] or sound['title'] }}" required>
-    <label for="url">Path</label>
-    <textarea name="url" id="url">{{ request.form['url'] or sound['url'] }}</textarea>
     <input type="submit" value="Save">
   </form>
   <hr>

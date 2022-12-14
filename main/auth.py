@@ -77,15 +77,15 @@ def login():
 
                 # Insert default sounds
                 db.execute(
-                'INSERT INTO sound (title, url, user_id)'
+                'INSERT INTO sound (title, path, user_id)'
                 ' VALUES (?, ?, ?)',
-                ("Correct", "../../static/default_sounds/Correct Sound Effect.mp3", user['id'])
+                ("Correct", "../../static/default_sounds/correct.mp3", user['id'])
                 )
                 db.commit()
                 db.execute(
-                'INSERT INTO sound (title, url, user_id)'
+                'INSERT INTO sound (title, path, user_id)'
                 ' VALUES (?, ?, ?)',
-                ("Incorrect", "../../static/default_sounds/Incorrect Sound Effect.mp3", user['id'])
+                ("Incorrect", "../../static/default_sounds/incorrect.mp3", user['id'])
                 )
                 db.commit()
 
